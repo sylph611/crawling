@@ -1,33 +1,38 @@
 package com.sylph.crawling.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.sylph.crawling.dtos.DashboardResponse;
+import com.sylph.crawling.dtos.StockInfo;
+import com.sylph.crawling.utils.StockEnum;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class StockPriceService {
 
-    @Autowired
-    private StockPriceCrawler stockPriceCrawler;
+    private final StockPriceCrawler stockPriceCrawler;
 
-    public String getCurrentPrice(String stockCode) {
-        try {
-            // 주가 정보 가져오기
-            String currentPrice = stockPriceCrawler.getCurrentPrice(stockCode);
-            return currentPrice;
-        } catch (IOException e) {
-            return "Error fetching current price information";
-        }
+    public DashboardResponse getDashboardInfo() {
+        return DashboardResponse.of(getStockInfos());
     }
 
-    public String getInvestorTrend(String stockCode) {
+    private List<StockInfo> getStockInfos() {
+        List<StockInfo> list = new ArrayList<>();
         try {
-            // 투자자별 매매동향 정보 가져오기
-            String investorTrend = stockPriceCrawler.crawlInvestorTrend(stockCode);
-            return investorTrend;
+            for (StockEnum stockEnum: StockEnum.values()) {
+                String price = stockPriceCrawler.getCurrentPrice(stockEnum);
+                String investorTrend = stockPriceCrawler.crawlInvestorTrend(stockEnum);
+
+                list.add(StockInfo.from(stockEnum.getName(), price, investorTrend));
+            }
         } catch (Exception e) {
-            return "Error fetching investor trend information";
+            throw new RuntimeException(e);
         }
+
+        return list;
     }
+
 }
