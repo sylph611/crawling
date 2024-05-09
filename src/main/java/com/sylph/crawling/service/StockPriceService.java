@@ -26,8 +26,9 @@ public class StockPriceService {
             for (StockEnum stockEnum: StockEnum.values()) {
                 String price = stockPriceCrawler.getCurrentPrice(stockEnum);
                 String investorTrend = stockPriceCrawler.crawlInvestorTrend(stockEnum);
+                List<String> news = stockPriceCrawler.getRecentNews(stockEnum);
 
-                list.add(StockInfo.from(stockEnum.getName(), Integer.parseInt(price.replace(",","")), investorTrend));
+                list.add(StockInfo.from(stockEnum.getName(), Integer.parseInt(price.replace(",","")), investorTrend, news));
             }
         } catch (Exception e) {
             throw new RuntimeException(e);

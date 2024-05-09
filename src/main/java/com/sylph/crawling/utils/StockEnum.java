@@ -6,10 +6,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public enum StockEnum {
+    KAKAOBANK("KAKAOBANK","323410", "카카오뱅크"),
+    NAVER("NAVER","035420", "네이버");
 
-    NAVER("NAVER","035420"),
-    KAKAOBANK("KAKAOBANK","323410");
 
     private final String name;
     private final String code;
+    private final String searchKeyword;
 }
