@@ -6,6 +6,7 @@ import com.sylph.crawling.utils.StockEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class StockPriceService {
     private final StockPriceCrawler stockPriceCrawler;
 
     public DashboardResponse getDashboardInfo() {
-        return DashboardResponse.of(getStockInfos());
+        return DashboardResponse.of(getStockInfos(), LocalDateTime.now());
     }
 
     private List<StockInfo> getStockInfos() {
