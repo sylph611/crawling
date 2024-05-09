@@ -67,13 +67,8 @@ public class StockPriceCrawler {
         // 최근 뉴스 목록 가져오기
         Elements newsElements = searchPageDoc.select("ul.list_news li");
 
-        // 현재 시간과 비교하기 위해 10분 전의 시간 구하기
-        LocalDateTime tenMinutesAgo = LocalDateTime.now().minusMinutes(10);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd. HH:mm");
-
         List<String> recentNews = new ArrayList<>();
 
-        // 뉴스 목록에서 최근 10분 내에 게시된 기사 찾기
         for (Element newsElement : newsElements) {
             if(!ObjectUtils.isEmpty(newsElement.selectFirst("a.news_tit"))) {
                 String newsTitle = newsElement.selectFirst("a.news_tit").text();
@@ -81,17 +76,6 @@ public class StockPriceCrawler {
 
                 recentNews.add(newsTitle+" / "+newsTime);
             }
-//            // 기사 시간을 LocalDateTime으로 변환하여 비교
-//            LocalDateTime articleTime = LocalDateTime.parse(newsTime, formatter);
-//
-//            // 현재 시간과 비교하여 최근 10분 내에 게시된 기사인지 확인
-//            if (articleTime.isAfter(tenMinutesAgo)) {
-//                recentNews.add(newsTitle);
-//            } else {
-//                // 기사 목록이 최근 10분 이내에 게시된 것들이므로, 시간순으로 정렬되어 있으므로
-//                // 더 이상 확인할 필요 없음
-//                break;
-//            }
         }
 
         return recentNews;
