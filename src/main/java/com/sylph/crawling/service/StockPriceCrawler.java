@@ -59,7 +59,7 @@ public class StockPriceCrawler {
 
     public List<String> getRecentNews(StockEnum stockEnum) throws IOException {
         // 카카오뱅크 관련 뉴스 검색 URL
-        String searchUrl = "https://search.naver.com/search.naver?where=news&query="+stockEnum.getSearchKeyword();
+        String searchUrl = "https://search.naver.com/search.naver?where=news&query="+stockEnum.getSearchKeyword()+"&sm=tab_opt&sort=1&photo=0&field=0&pd=0&ds=&de=&docid=&related=0&mynews=0&office_type=0&office_section_code=0&news_office_checked=&nso=so%3Add%2Cp%3Aall&is_sug_officeid=0&office_category=0&service_area=0";
 
         // HTML 파싱
         Document searchPageDoc = Jsoup.connect(searchUrl).get();
