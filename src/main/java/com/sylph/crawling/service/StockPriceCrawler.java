@@ -80,4 +80,37 @@ public class StockPriceCrawler {
 
         return recentNews;
     }
+
+    public String getPriceChangeFlag(StockEnum stockEnum) throws IOException {
+        // 네이버 주식페이지 URL
+        String url = "https://finance.naver.com/item/main.nhn?code="+stockEnum.getCode();
+
+        // HTML 파싱
+        Document doc = Jsoup.connect(url).get();
+
+        // 현재 가격과 전일 종가 추출
+        Element currentPriceElement = doc.selectFirst("p.no_today span.blind");
+        Element prevCloseElement = doc.selectFirst("td.first span.blind");
+
+        String priceChangeFlag = "";
+        if (!ObjectUtils.isEmpty(currentPriceElement) && !ObjectUtils.isEmpty(prevCloseElement)) {
+            String currentPriceStr = currentPriceElement.text().replace(",", ""); // 쉼표 제거
+            String prevCloseStr = prevCloseElement.text().replace(",", ""); // 쉼표 제거
+
+            // 문자열을 숫자로 변환
+            double currentPrice = Double.parseDouble(currentPriceStr);
+            double prevClose = Double.parseDouble(prevCloseStr);
+
+            // 전일 대비 가격 변동 여부 확인
+            if (currentPrice > prevClose) {
+                priceChangeFlag = "<font color='red'>▲ +"+String.format("%.2f", currentPrice - prevClose)+"</font>"; // 상승
+            } else if (currentPrice < prevClose) {
+                priceChangeFlag = "<font color='blue'>▼ -"+String.format("%.2f", prevClose - currentPrice)+"</font>"; // 하락
+            } else {
+                priceChangeFlag = "<font color='black'>-</font>"; // 변동 없음
+            }
+        }
+
+        return priceChangeFlag;
+    }
 }
